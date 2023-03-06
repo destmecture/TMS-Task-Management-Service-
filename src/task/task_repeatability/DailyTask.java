@@ -3,7 +3,6 @@ package task.task_repeatability;
 import task.Task;
 import task.TaskType;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 public class DailyTask extends Task {
@@ -12,9 +11,13 @@ public class DailyTask extends Task {
     }
 
     @Override
-    public boolean appearsLn(LocalDate dateForChecking) {
-        return (dateForChecking.isAfter(getLocalDateTime().toLocalDate()) || dateForChecking.isEqual(getLocalDateTime().toLocalDate()));
+    public boolean appearsLn(LocalDateTime dateForChecking) {
+        return getFirstDate().toLocalDate().isEqual(dateForChecking.toLocalDate());
     }
+//    @Override
+//    public boolean appearsLn(LocalDate dateForChecking) {
+//        return (dateForChecking.isAfter(getLocalDateTime().toLocalDate()) || dateForChecking.isEqual(getLocalDateTime().toLocalDate()));
+//    }
 
     @Override
     public String toString() {

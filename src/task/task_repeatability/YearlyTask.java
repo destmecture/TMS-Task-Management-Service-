@@ -3,7 +3,6 @@ package task.task_repeatability;
 import task.Task;
 import task.TaskType;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 public class YearlyTask extends Task {
@@ -12,9 +11,8 @@ public class YearlyTask extends Task {
     }
 
     @Override
-    public boolean appearsLn(LocalDate dateForChecking) {
-        return (dateForChecking.isAfter(getLocalDateTime().toLocalDate()) || dateForChecking.isEqual(getLocalDateTime().toLocalDate())
-                && dateForChecking.getDayOfYear() == getLocalDateTime().getDayOfYear());
+    public boolean appearsLn(LocalDateTime dateForChecking) {
+        return getFirstDate().getDayOfYear()==dateForChecking.getDayOfYear();
     }
 
     @Override

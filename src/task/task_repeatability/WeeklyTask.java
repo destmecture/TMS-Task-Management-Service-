@@ -3,7 +3,6 @@ package task.task_repeatability;
 import task.Task;
 import task.TaskType;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 public class WeeklyTask extends Task {
@@ -12,9 +11,8 @@ public class WeeklyTask extends Task {
     }
 
     @Override
-    public boolean appearsLn(LocalDate dateForChecking) {
-        return (dateForChecking.isAfter(getLocalDateTime().toLocalDate()) || dateForChecking.isEqual(getLocalDateTime().toLocalDate())
-                && dateForChecking.getDayOfWeek() == getLocalDateTime().getDayOfWeek());
+    public boolean appearsLn(LocalDateTime dateForChecking) {
+        return getFirstDate().getDayOfWeek()==dateForChecking.getDayOfWeek();
     }
 
     @Override

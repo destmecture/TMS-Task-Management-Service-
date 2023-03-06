@@ -36,7 +36,7 @@ public abstract class Task {
         return id;
     }
 
-    public LocalDateTime getLocalDateTime() {
+    public LocalDateTime getFirstDate() {
         return dateTime;
     }
     public LocalDate getLocalDate() {
@@ -58,7 +58,7 @@ public abstract class Task {
     }
 
     //endregion
-    public abstract boolean appearsLn(LocalDate dateForChecking);
+    public abstract boolean appearsLn(LocalDateTime dateForChecking);
 
     @Override
     public String toString() {

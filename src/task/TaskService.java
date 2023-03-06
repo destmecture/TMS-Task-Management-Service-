@@ -7,6 +7,8 @@ import task.task_repeatability.*;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -22,7 +24,7 @@ public class TaskService {
                 "\n2 - Удалить задачу" +
                 "\n3 - Изменить оглавление" +
                 "\n4 - Изменить описание" +
-                "\n5 - Посмотреть задачи на сегодня" +
+                "\n5 - Посмотреть задачи на день" +
                 "\n6 - Посмотреть все задачи по дням" +
                 "\n7 - Посмотреть удаленные задачи" +
                 "\n0 - Выход");
@@ -37,7 +39,11 @@ public class TaskService {
             case 0:
                 System.exit(0);
             case 1:
-                createNewTask();
+                try{
+                    createNewTask();
+                }catch (DateTimeParseException e){
+                    System.err.println("Проверьте правильность введения даты в формате dd.MM.yyyy HH:mm и повторите еще раз");
+                }
                 taskManagementApp();
                 break;
             case 2:
@@ -57,7 +63,11 @@ public class TaskService {
                 taskManagementApp();
                 break;
             case 5:
-                System.out.println(getAllByDate(LocalDateTime.now().toLocalDate()));
+                try{
+                    System.out.println(getAllByDate());
+                }catch (DateTimeParseException e){
+                    System.err.println("Проверьте правильность введения даты в формате dd.MM.yyyy и повторите еще раз");
+                }
                 taskManagementApp();
                 break;
             case 6:
@@ -104,6 +114,9 @@ public class TaskService {
             System.out.println("Вы ввели неверный номер повторяемости, по умолчанию была присовена однократная повторяемость");
             repeatability = 1;
         }
+        System.out.println("Введите дату появления задачи в формате: dd.MM.yyyy HH:mm");
+        LocalDateTime taskDate = LocalDateTime.parse(scanner.nextLine(), DateTimeFormatter.ofPattern("dd.MM.yyyy HH:mm"));
+
 
         switch (repeatability){
             case 1:
@@ -111,7 +124,7 @@ public class TaskService {
                 Task oneTimeTask = new OneTimeTask(title,
                         description,
                         currentType,
-                        LocalDateTime.now());
+                        taskDate);
                 taskMap.put(oneTimeTask.getId(), oneTimeTask);
                 System.out.println("Вы успешно добавили задачу: ");
                 System.out.println(oneTimeTask);
@@ -120,7 +133,7 @@ public class TaskService {
                 Task dailyTask = new DailyTask(title,
                         description,
                         currentType,
-                        LocalDateTime.now());
+                        taskDate);
                 taskMap.put(dailyTask.getId(), dailyTask);
                 System.out.println("Вы успешно добавили задачу: ");
                 System.out.println(dailyTask);
@@ -129,7 +142,7 @@ public class TaskService {
                 Task weeklyTask = new WeeklyTask(title,
                         description,
                         currentType,
-                        LocalDateTime.now());
+                        taskDate);
                 taskMap.put(weeklyTask.getId(), weeklyTask);
                 System.out.println("Вы успешно добавили задачу: ");
                 System.out.println(weeklyTask);
@@ -138,7 +151,7 @@ public class TaskService {
                 Task monthlyTask = new MonthlyTask(title,
                         description,
                         currentType,
-                        LocalDateTime.now());
+                        taskDate);
                 taskMap.put(monthlyTask.getId(), monthlyTask);
                 System.out.println("Вы успешно добавили задачу: ");
                 System.out.println(monthlyTask);
@@ -147,7 +160,7 @@ public class TaskService {
                 Task yearlyTask = new YearlyTask(title,
                         description,
                         currentType,
-                        LocalDateTime.now());
+                        taskDate);
                 taskMap.put(yearlyTask.getId(), yearlyTask);
                 System.out.println("Вы успешно добавили задачу: ");
                 System.out.println(yearlyTask);
@@ -199,10 +212,12 @@ public class TaskService {
     private static void getRemovedTasks(){
         removedTasks.forEach(System.out::println);
     }
-    private static List<Task> getAllByDate(LocalDate dateForChecking) {
+    private static List<Task> getAllByDate() {
+        System.out.println("Введите дату, для которой вы хотите посмотреть имеющиеся задачи, в формате dd.MM.yyyy");
+        LocalDate dateForChecking = LocalDate.parse(scanner.nextLine(), DateTimeFormatter.ofPattern("dd.MM.yyyy"));
         List<Task> taskListAllByDate = new ArrayList<>();
         for (Map.Entry<Integer, Task> entry : taskMap.entrySet()) {
-            if (entry.getValue().appearsLn(dateForChecking)) {
+            if (entry.getValue().appearsLn(dateForChecking.atStartOfDay())) {
                 taskListAllByDate.add(entry.getValue());
             }
         }
@@ -220,4 +235,5 @@ public class TaskService {
             scanner.nextLine();
         }
     }
+
 }
